@@ -7,6 +7,13 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
 
 type EArrayFull = class(Exception);
+type EArrayFull2 = class(EArrayFull)
+  private
+    FTamanhoArray: Integer;
+  published
+    constructor Create(const Msg: string; const ATamanhoArray: Integer); Reintroduce;
+    property TamanhoArray: Integer read FTamanhoArray write FTamanhoArray;
+end;
 
 type TMinhaArray = class
   private
@@ -16,6 +23,8 @@ type TMinhaArray = class
   public
     Constructor Create(AMax: Integer); reintroduce;
     procedure Add(Valor: Integer);
+    procedure Add2(Valor: Integer);
+    procedure Add3(Valor: Integer);
 end;
 
 type
@@ -23,9 +32,11 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    Button4: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
   private
     FMinhaArray: TMinhaArray;
     { Private declarations }
@@ -46,6 +57,32 @@ procedure TMinhaArray.Add(Valor: Integer);
 begin
   if IsFull then
     raise EArrayFull.Create('Array full')
+  else
+  begin
+    SetLength(FMinhaArray,length(FMinhaArray)+1);
+    FMinhaArray[High(FMinhaArray)] := Valor;
+  end;
+end;
+
+procedure TMinhaArray.Add2(Valor: Integer);
+begin
+  if IsFull then
+    raise EArrayFull2.Create('Array full',length(FMinhaArray))
+  else
+  begin
+    SetLength(FMinhaArray,length(FMinhaArray)+1);
+    FMinhaArray[High(FMinhaArray)] := Valor;
+  end;
+end;
+
+procedure TMinhaArray.Add3(Valor: Integer);
+var Ex: EArrayFull2 ;
+begin
+  if IsFull then
+  begin
+    Ex := EArrayFull2.Create('Array full',0);
+    Ex.TamanhoArray := Length(FMinhaArray);
+  end
   else
   begin
     SetLength(FMinhaArray,length(FMinhaArray)+1);
@@ -78,16 +115,43 @@ end;
 procedure TForm1.Button2Click(Sender: TObject);
 begin
   // Unguarded call
-  FMinhaArray.Add(24);  ShowMessage('Nunca vai passar aqui!');
+  FMinhaArray.Add(24);
+  ShowMessage('Nunca vai passar aqui!');
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
 begin
   try
     // This procedure raises an exception
-    FMinhaArray.Add(24);    ShowMessage('Nunca vai passar aqui!');
-  except    on EArrayFull do
-      ShowMessage('Deu pau e eu tratei.');  end;  ShowMessage('Vai passar poraqui');
+    FMinhaArray.Add(24);
+    ShowMessage('Nunca vai passar aqui!');
+  except
+    on EArrayFull do
+      ShowMessage('Deu pau e eu tratei.');
+  end;
+  ShowMessage('Vai passar poraqui');
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+begin
+  try
+    // This procedure raises an exception
+    FMinhaArray.Add2(24);
+    ShowMessage('Nunca vai passar aqui!');
+  except
+    on E: EArrayFull2 do
+      ShowMessage('Deu pau e eu tratei.:'+E.Message+#13+
+      'Tamanho da Array : '+E.TamanhoArray.ToString);
+  end;
+  ShowMessage('Vai passar poraqui');
+end;
+
+{ EArrayFull2 }
+
+constructor EArrayFull2.Create(const Msg: string; const ATamanhoArray: Integer);
+begin
+  inherited Create(Msg);
+  FTamanhoArray := ATamanhoArray;
 end;
 
 end.
