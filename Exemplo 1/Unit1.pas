@@ -33,10 +33,12 @@ type
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
+    Button5: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
   private
     FMinhaArray: TMinhaArray;
     { Private declarations }
@@ -82,6 +84,7 @@ begin
   begin
     Ex := EArrayFull2.Create('Array full',0);
     Ex.TamanhoArray := Length(FMinhaArray);
+    raise Ex;
   end
   else
   begin
@@ -144,6 +147,20 @@ begin
       'Tamanho da Array : '+E.TamanhoArray.ToString);
   end;
   ShowMessage('Vai passar poraqui');
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+begin
+  try
+      // This procedure raises an exception
+      FMinhaArray.Add3(24);
+      ShowMessage('Nunca vai passar aqui!');
+    except
+      on E: EArrayFull2 do
+        ShowMessage('Deu pau e eu tratei.:'+E.Message+#13+
+        'Tamanho da Array : '+E.TamanhoArray.ToString);
+    end;
+    ShowMessage('Vai passar poraqui');
 end;
 
 { EArrayFull2 }
