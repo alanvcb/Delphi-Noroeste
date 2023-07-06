@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.AppEvnts;
 
 type
   TForm1 = class(TForm)
@@ -34,6 +34,8 @@ implementation
 {$R *.dfm}
 
 uses System.Math;
+
+
 
 procedure TForm1.Button1Click(Sender: TObject);
 var Result: Integer;
